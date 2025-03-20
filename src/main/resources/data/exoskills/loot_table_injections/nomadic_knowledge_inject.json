@@ -1,0 +1,54 @@
+{
+  "global_injects": {
+    "cause": "minecraft:chest"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:experience_bottle",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "exoskills:skill_condition",
+              "skill": "nomadic_knowledge"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "exoskills:horizon_of_fate",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "exoskills:skill_condition",
+              "skill": "nomadic_knowledge",
+              "rank": 1
+            }
+          ]
+        }
+      ],
+      "conditions": []
+    }
+  ]
+}

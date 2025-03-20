@@ -1,0 +1,91 @@
+{
+    "effect.exoskills.patience": "Patience",
+    "effect.exoskills.patience.description": "Increases luck by .2, mana regen by 2%, ranged strength by .75%, and passive critical chance by 1.5% per level.",
+    "effect.exoskills.looters_luck": "Looter's Luck",
+    "effect.exoskills.looters_luck.description": "Increases luck by .5 per level, can be stacked with regular luck.",
+
+    "item.exoskills.garnish_and_seasonings": "Garnish & Seasonings",
+
+    "item.exoskills.onyx": "Onyx",
+    "item.exoskills.onyx.jei.info": "Combine with any damageable piece of equipment in a smithing table to increase it's max durability by 20%.",
+
+    "item.exoskills.lucky_essence": "Lucky Essence",
+    "item.exoskills.lucky_essence.jei.info": "Can be brewed into luck potions or used to highlight nearby, unlooted, chests.",
+    "item.exoskills.lucky_clover": "Lucky Clover",
+    "item.exoskills.lucky_gem": "Lucky Gem",
+
+    "item.minecraft.potion.effect.enhanced_luck": "Potion of Enhanced Luck",
+    "item.minecraft.potion.effect.enhanced_luck_extended": "Potion of Enhanced Luck",
+
+    "item.minecraft.splash_potion.effect.enhanced_luck": "Splash Potion of Enhanced Luck",
+    "item.minecraft.splash_potion.effect.enhanced_luck_extended": "Splash Potion of Enhanced Luck",
+
+    "item.minecraft.lingering_potion.effect.enhanced_luck": "Lingering Potion of Enhanced Luck",
+    "item.minecraft.lingering_potion.effect.enhanced_luck_extended": "Lingering Potion of Enhanced Luck",
+
+    "item.minecraft.tipped_arrow.effect.enhanced_luck": "Arrow of Enhanced Luck",
+    "item.minecraft.tipped_arrow.effect.enhanced_luck_extended": "Arrow of Enhanced Luck",
+
+    "item.exoskills.boon.mining": "Boon of the Mantle",
+    "item.exoskills.boon.husbandry": "Boon of Nature",
+    "item.exoskills.boon.fishing": "Boon of the Ocean",
+    "item.exoskills.boon.attribute_info": " (%s)",
+    "item.exoskills.boon.info.1": "Boon bonus: 0{%s}",
+    "item.exoskills.boon.info.2": "Bonus amount: 0{+%.1f}",
+    "item.exoskills.boon.info.3": "Boon bonuses last until death.",
+    "item.exoskills.boon.use": "You feel empowered from the boon.",
+    "item.exoskills.boon.use.already_used": "You have already gained the benefits of this boon.",
+
+    "item.exoskills.arcane_singularity": "Arcane Singularity",
+    "item.exoskills.arcane_singularity.info.1": "Singularity Requirement0{: }1{%s}",
+    "item.exoskills.arcane_singularity.info.2": "Singularity Effect0{: }1{%s}",
+    "item.exoskills.arcane_singularity.info.effect.infernal_torment": "Infernal Torment",
+    "item.exoskills.arcane_singularity.info.effect.infernal_torment.desc": "Damaged entities take double fire damage",
+    "item.exoskills.arcane_singularity.jei.info": "Combine in an anvil with gear that contains the singularity's requirement to unlock special effects.",
+
+    "item.exoskills.horizon_of_fate": "Fate's Horizon",
+    "item.exoskills.horizon_of_fate.use.rewarded": "You wished for great knowledge, has fate answered your call?",
+    "item.exoskills.horizon_of_fate.jei.info": "Can be used in place of lapis when enchanting to unlock treasure limited enchants. (Curses are included)",
+    "item.exoskills.horizon_of_fate.info.1": "Use to gain a random amount of XP, or,",
+    "item.exoskills.horizon_of_fate.info.2": "use in place of lapis when enchanting to",
+    "item.exoskills.horizon_of_fate.info.3": "gain the ability to roll limited enchants.",
+
+    "enchantment.exoskills.high_quality": "High Quality",
+    "enchantment.exoskills.high_quality.desc": "A high quality craft, effects differ depending on the item.",
+    "enchantment.exoskills.masterwork": "Masterwork",
+    "enchantment.exoskills.masterwork.desc": "A masterwork craft, effects differ depending on the item.",
+
+    "singularity.exoskills.unbreakable_bond": "Unbreakable Bond",
+    "singularity.exoskills.unbreakable_bond.desc.1": "When taking any damage, 7.5%% chance",
+    "singularity.exoskills.unbreakable_bond.desc.2": "to convert 25%% of the damage into",
+    "singularity.exoskills.unbreakable_bond.desc.3": "durability damage.",
+    "singularity.exoskills.decay_dissipation": "Decay Dissipation",
+    "singularity.exoskills.decay_dissipation.desc.1": "While this item has full durability,",
+    "singularity.exoskills.decay_dissipation.desc.2": "it will not take durability damage",
+    "singularity.exoskills.decay_dissipation.desc.3": "from normal use.",
+    "singularity.exoskills.spectral_form": "Spectral Form",
+    "singularity.exoskills.spectral_form.desc.1": "10%% chance to ignore projectiles.",
+    "singularity.exoskills.spectral_form.desc.2": "+8%% all damage reduction.",
+    "singularity.exoskills.shock_absorption": "Shock Absorption",
+    "singularity.exoskills.shock_absorption.desc.1": "After taking explosion damage, gain",
+    "singularity.exoskills.shock_absorption.desc.2": "absorption equal to 20%% of the damage",
+    "singularity.exoskills.shock_absorption.desc.3": "up to a maximum of 8 absorption.",
+    "singularity.exoskills.shock_absorption.desc.4": "+8%% all damage reduction.",
+    "singularity.exoskills.thermal_conductivity": "Thermal Conductivity",
+    "singularity.exoskills.thermal_conductivity.desc.1": "Taking damage from another entity",
+    "singularity.exoskills.thermal_conductivity.desc.2": "has a 20%% chance to cause a flare.",
+    "singularity.exoskills.thermal_conductivity.desc.3": "+8%% all damage reduction.",
+    "singularity.exoskills.flawless_blade": "Flawless Blade",
+    "singularity.exoskills.flawless_blade.desc.1": "Increases damage by +0.5.",
+    "singularity.exoskills.soul_burn": "Soul Burn",
+    "singularity.exoskills.soul_burn.desc.1": "Attacks apply fire vulnerability",
+    "singularity.exoskills.soul_burn.desc.2": "for 6 seconds on the defender.",
+    "singularity.exoskills.crippling_strike": "Crippling Strike",
+    "singularity.exoskills.crippling_strike.desc.1": "Attacks apply slowness 2 for",
+    "singularity.exoskills.crippling_strike.desc.2": "3 seconds on the defender.",
+
+    "tab.exoskills.items": "ExoSkills Items",
+
+    "item.modifiers.reinforcement": "+20%% Max Durability",
+    "item.modifiers.unplaceable": "Unplaceable"
+}

@@ -1,0 +1,40 @@
+{
+  "global_injects": {
+    "cause": "minecraft:entity"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "exoskills:horizon_of_fate",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "exolib:mob_category_condition",
+          "category": "monster",
+          "entity": "this"
+        },
+        {
+          "condition": "exoskills:skill_condition",
+          "skill": "horizon_of_fate"
+        }
+      ]
+    }
+  ]
+}

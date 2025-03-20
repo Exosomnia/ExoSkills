@@ -1,0 +1,9 @@
+{
+  "type": "exoskills:reinforce_smithing",
+  "addition": {
+    "tag": "forge:ingots/iron"
+  },
+  "template": {
+    "item": "exoskills:onyx"
+  }
+}

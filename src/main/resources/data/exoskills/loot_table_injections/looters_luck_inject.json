@@ -1,0 +1,48 @@
+{
+  "global_injects": {
+    "cause": "minecraft:chest"
+  },
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "exoskills:lucky_essence",
+          "functions": [],
+          "conditions": [
+            {
+              "condition": "exoskills:skill_condition",
+              "skill": "looters_luck"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "exoskills:lucky_clover",
+          "functions": [],
+          "conditions": [
+            {
+              "condition": "exoskills:skill_condition",
+              "skill": "looters_luck",
+              "rank": 1
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "exoskills:lucky_gem",
+          "functions": [],
+          "conditions": [
+            {
+              "condition": "exoskills:skill_condition",
+              "skill": "looters_luck",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "conditions": []
+    }
+  ]
+}
