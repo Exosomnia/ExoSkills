@@ -6,31 +6,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:name_tag"
+          "name": "minecraft:name_tag",
+          "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:saddle"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 0.25,
-                "min": 0.0
-              },
-              "function": "minecraft:set_damage"
-            },
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 24.0,
-              "treasure": true
-            }
-          ],
-          "name": "minecraft:bow"
+          "name": "minecraft:saddle",
+          "weight": 1
         },
         {
           "type": "minecraft:item",
@@ -50,7 +32,29 @@
               "treasure": true
             }
           ],
-          "name": "minecraft:fishing_rod"
+          "name": "minecraft:bow",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.25,
+                "min": 0.0
+              },
+              "function": "minecraft:set_damage"
+            },
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 24.0,
+              "treasure": true
+            }
+          ],
+          "name": "minecraft:fishing_rod",
+          "weight": 1
         },
         {
           "type": "minecraft:item",
@@ -61,11 +65,13 @@
               "treasure": true
             }
           ],
-          "name": "minecraft:book"
+          "name": "minecraft:book",
+          "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:nautilus_shell"
+          "name": "minecraft:nautilus_shell",
+          "weight": 1
         },
         {
           "type": "minecraft:loot_table",
@@ -73,8 +79,23 @@
           "weight": 6,
           "conditions": [
             {
-              "condition": "exoskills:skill_condition",
-              "skill": "forgotten_treasures"
+              "condition": "exoskills:rank_condition",
+              "skill": "forgotten_treasures",
+              "rank": 0,
+              "entity": "killer"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "name": "exoskills:gameplay/fishing/forgotten_treasures_tier_2",
+          "weight": 6,
+          "conditions": [
+            {
+              "condition": "exoskills:rank_condition",
+              "skill": "forgotten_treasures",
+              "rank": 1,
+              "entity": "killer"
             }
           ]
         }

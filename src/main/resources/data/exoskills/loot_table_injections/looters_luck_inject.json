@@ -10,12 +10,7 @@
           "type": "minecraft:item",
           "name": "exoskills:lucky_essence",
           "functions": [],
-          "conditions": [
-            {
-              "condition": "exoskills:skill_condition",
-              "skill": "looters_luck"
-            }
-          ]
+          "conditions": []
         },
         {
           "type": "minecraft:item",
@@ -23,9 +18,10 @@
           "functions": [],
           "conditions": [
             {
-              "condition": "exoskills:skill_condition",
+              "condition": "exoskills:rank_condition",
               "skill": "looters_luck",
-              "rank": 1
+              "rank": 1,
+              "entity": "this"
             }
           ]
         },
@@ -35,14 +31,20 @@
           "functions": [],
           "conditions": [
             {
-              "condition": "exoskills:skill_condition",
+              "condition": "exoskills:rank_condition",
               "skill": "looters_luck",
-              "rank": 2
+              "rank": 2,
+              "entity": "this"
             }
           ]
         }
       ],
-      "conditions": []
+      "conditions": [
+        {
+          "condition": "exoskills:skill_condition",
+          "skill": "looters_luck"
+        }
+      ]
     }
   ]
 }

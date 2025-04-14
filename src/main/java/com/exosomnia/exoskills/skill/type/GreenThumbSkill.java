@@ -9,8 +9,8 @@ public class GreenThumbSkill extends BaseSkill {
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.1;
-            case 1 -> 0.2;
+            case 0 -> 0.10;
+            case 1 -> 0.25;
             default -> 1.0;
         };
     }

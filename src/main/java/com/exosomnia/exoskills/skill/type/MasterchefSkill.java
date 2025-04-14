@@ -19,9 +19,7 @@ public class MasterchefSkill extends BaseSkill implements LootableSkill {
 
     @Override
     public boolean validate(LootContext context) {
-        if(!context.hasParam(LootContextParams.THIS_ENTITY)) return false;
-
-        Entity lootEntity = context.getParam(LootContextParams.THIS_ENTITY);
+        Entity lootEntity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (!(lootEntity instanceof ServerPlayer player)) return false;
 
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);

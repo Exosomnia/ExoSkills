@@ -59,7 +59,7 @@ public class JEIIntegration implements IModPlugin {
 
                     @Override
                     public int getBrewingSteps() {
-                        return 1;
+                        return 2;
                     }
                 },
                 //Enhanced Luck
@@ -81,7 +81,7 @@ public class JEIIntegration implements IModPlugin {
 
                     @Override
                     public int getBrewingSteps() {
-                        return 2;
+                        return 3;
                     }
                 },
                 //Enhanced Luck Extended
@@ -103,7 +103,7 @@ public class JEIIntegration implements IModPlugin {
 
                     @Override
                     public int getBrewingSteps() {
-                        return 3;
+                        return 4;
                     }
                 }
         ));

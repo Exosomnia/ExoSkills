@@ -1,14 +1,18 @@
 package com.exosomnia.exoskills;
 
+import com.exosomnia.exolib.recipes.brewing.BrewingRecipeHelper;
 import com.exosomnia.exolib.recipes.brewing.SimpleBrewingRecipe;
 import com.exosomnia.exoskills.rendering.RenderingManager;
 import com.exosomnia.exoskills.skill.SkillManager;
+import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.eventbus.api.EventListenerHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -55,9 +59,9 @@ public class ExoSkills
         }
 
         event.enqueueWork(() -> {
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Potions.AWKWARD, Registry.ITEM_LUCKY_ESSENCE.get(), Potions.LUCK));
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Potions.LUCK, Registry.ITEM_LUCKY_CLOVER.get(), Registry.POTION_ENHANCED_LUCK.get()));
-            BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Registry.POTION_ENHANCED_LUCK.get(), Registry.ITEM_LUCKY_GEM.get(), Registry.POTION_ENHANCED_LUCK_EXTENDED.get()));
+            BrewingRecipeHelper.addSimplePotionRecipe(Potions.AWKWARD, Registry.ITEM_LUCKY_ESSENCE.get(), Potions.LUCK);
+            BrewingRecipeHelper.addSimplePotionRecipe(Potions.LUCK, Registry.ITEM_LUCKY_CLOVER.get(), Registry.POTION_ENHANCED_LUCK.get());
+            BrewingRecipeHelper.addSimplePotionRecipe(Registry.POTION_ENHANCED_LUCK.get(), Registry.ITEM_LUCKY_GEM.get(), Registry.POTION_ENHANCED_LUCK_AMPLIFIED.get());
         });
     }
 

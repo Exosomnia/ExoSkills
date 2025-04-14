@@ -21,29 +21,20 @@ public class NomadicKnowledgeSkill extends BaseSkill implements LootableSkill {
 
     @Override
     public boolean validate(LootContext context) {
-        return validateWithRank(context, 0);
-    }
-
-    @Override
-    public boolean validateWithRank(LootContext context, int minRank) {
         ILootParamsMixin lootParams = ((ILootParamsMixin)((LootContextAccessor)context).getParams());
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof ServerPlayer player) || !lootParams.shouldLootModify()) { return false; }
 
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills nomadicKnowledge = Skills.NOMADIC_KNOWLEDGE;
-        if (playerSkillData.hasSkill(nomadicKnowledge)) {
-            byte rank = playerSkillData.getSkillRank(nomadicKnowledge);
-            return rank >= minRank && player.getRandom().nextDouble() < chanceForRank(rank);
-        }
-
-        return false;
+        return playerSkillData.hasSkill(nomadicKnowledge) && player.getRandom().nextDouble() < chanceForRank(playerSkillData.getSkillRank(nomadicKnowledge));
     }
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
             case 0 -> 0.01;
-            case 1 -> 0.02;
+            case 1 -> 0.015;
+            case 2 -> 0.02;
             default -> 1.0;
         };
     }

@@ -4,9 +4,11 @@ import com.exosomnia.exoarmory.ExoArmory;
 import com.exosomnia.exoskills.command.ExoSkillCommand;
 import com.exosomnia.exoskills.effect.LootersLuckEffect;
 import com.exosomnia.exoskills.effect.PatienceEffect;
+import com.exosomnia.exoskills.effect.QuickShotEffect;
 import com.exosomnia.exoskills.enchantment.HighQualityEnchantment;
 import com.exosomnia.exoskills.enchantment.MasterworkEnchantment;
 import com.exosomnia.exoskills.item.*;
+import com.exosomnia.exoskills.loot.conditions.RankCondition;
 import com.exosomnia.exoskills.loot.conditions.SkillCondition;
 import com.exosomnia.exoskills.loot.modifiers.SkillsLootModifier;
 import com.exosomnia.exoskills.networking.PacketHandler;
@@ -87,6 +89,7 @@ public class Registry {
 
     public static final DeferredRegister<LootItemConditionType> LOOT_ITEM_CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, ExoSkills.MODID);
     public static final RegistryObject<LootItemConditionType> SKILL_CONDITION = LOOT_ITEM_CONDITIONS.register("skill_condition", () -> new LootItemConditionType(new SkillCondition.Serializer()));
+    public static final RegistryObject<LootItemConditionType> RANK_CONDITION = LOOT_ITEM_CONDITIONS.register("rank_condition", () -> new LootItemConditionType(new RankCondition.Serializer()));
 
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ExoSkills.MODID);
     public static final RegistryObject<Codec<SkillsLootModifier>> LOOT_MOD_SKILLS = GLOBAL_LOOT_MODS.register("skills_loot_mod", SkillsLootModifier.CODEC);
@@ -109,12 +112,16 @@ public class Registry {
             PatienceEffect::new);
     public static final RegistryObject<MobEffect> EFFECT_LOOTERS_LUCK = MOB_EFFECTS.register("looters_luck",
             LootersLuckEffect::new );
+    public static final RegistryObject<MobEffect> EFFECT_QUICK_SHOT = MOB_EFFECTS.register("quick_shot",
+            QuickShotEffect::new );
 
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS,
             ExoSkills.MODID);
 
     public static final RegistryObject<Potion> POTION_ENHANCED_LUCK = POTIONS.register("enhanced_luck",
             () -> new Potion(new MobEffectInstance(MobEffects.LUCK, 6000, 0), new MobEffectInstance(EFFECT_LOOTERS_LUCK.get(), 6000, 0)));
+    public static final RegistryObject<Potion> POTION_ENHANCED_LUCK_AMPLIFIED = POTIONS.register("enhanced_luck_amplified",
+            () -> new Potion(new MobEffectInstance(MobEffects.LUCK, 6000, 0), new MobEffectInstance(EFFECT_LOOTERS_LUCK.get(), 6000, 1)));
     public static final RegistryObject<Potion> POTION_ENHANCED_LUCK_EXTENDED = POTIONS.register("enhanced_luck_extended",
             () -> new Potion(new MobEffectInstance(MobEffects.LUCK, 16000, 0), new MobEffectInstance(EFFECT_LOOTERS_LUCK.get(), 16000, 0)));
 
@@ -188,7 +195,7 @@ public class Registry {
     }
 
     public static void handleIntegrations(Integrations integration) {
-        LogUtils.getLogger().info("Attempting integration for: {}", integration.name());
+        LogUtils.getLogger().info("[ExoSkills Integrations] Attempting integration for: {}", integration.name());
         switch (integration) {
             case IRONS_SPELLBOOKS:
                 ATTRIBUTE_MAGIC_DAMAGE = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.bySeparator("irons_spellbooks:spell_power", ':'));

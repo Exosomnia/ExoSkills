@@ -20,29 +20,20 @@ public class LootersLuckSkill extends BaseSkill implements LootableSkill {
 
     @Override
     public boolean validate(LootContext context) {
-        return validateWithRank(context, 0);
-    }
-
-    @Override
-    public boolean validateWithRank(LootContext context, int minRank) {
         ILootParamsMixin lootParams = ((ILootParamsMixin)((LootContextAccessor)context).getParams());
         Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof ServerPlayer player) || !lootParams.shouldLootModify()) { return false; }
 
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills lootersLuck = Skills.LOOTERS_LUCK;
-        if (playerSkillData.hasSkill(lootersLuck)) {
-            byte rank = playerSkillData.getSkillRank(lootersLuck);
-            return rank >= minRank && player.getRandom().nextDouble() < (chanceForRank(rank) + (player.getLuck() * 0.001));
-        }
-
-        return false;
+        return playerSkillData.hasSkill(lootersLuck) && player.getRandom().nextDouble() < chanceForRank(playerSkillData.getSkillRank(lootersLuck));
     }
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
             case 0 -> 0.01;
-            case 1 -> 0.02;
+            case 1 -> 0.015;
+            case 2 -> 0.02;
             default -> 1.0;
         };
     }

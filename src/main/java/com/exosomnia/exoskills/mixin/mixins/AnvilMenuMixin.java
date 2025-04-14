@@ -1,5 +1,6 @@
 package com.exosomnia.exoskills.mixin.mixins;
 
+import com.exosomnia.exolib.utils.ExperienceUtils;
 import com.exosomnia.exoskills.ExoSkills;
 import com.exosomnia.exoskills.skill.PlayerSkillData;
 import com.exosomnia.exoskills.skill.Skills;
@@ -31,9 +32,12 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
         AnvilExpertSkill skill = ((AnvilExpertSkill)anvilExpert.getSkill());
         double reduction = skill.costReductionAmountForRank(playerSkillData.getSkillRank(anvilExpert));
-        int max = Math.max(0, skill.costReductionMaxForRank(playerSkillData.getSkillRank(anvilExpert)));
-        int originalCost = cost.get();
-        int actualReduction = (int)Math.min(max, (1.0 - reduction) * originalCost);
-        cost.set(originalCost - actualReduction);
+        int originalLevelCost = cost.get();
+        int originalXPCost = ExperienceUtils.totalXPForLevel(originalLevelCost);
+
+        int minReduction = skill.costReductionMinForRank(playerSkillData.getSkillRank(anvilExpert));
+        int newLevelCost = Math.min(Math.max(0, originalLevelCost - minReduction), ExperienceUtils.totalLevelForXP((int)(originalXPCost * (1.0 - reduction))));
+
+        cost.set(newLevelCost);
     }
 }

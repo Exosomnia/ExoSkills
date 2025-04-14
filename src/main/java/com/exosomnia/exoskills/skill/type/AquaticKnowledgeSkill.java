@@ -10,7 +10,8 @@ public class AquaticKnowledgeSkill extends BaseSkill {
     public double getAmountForRank(byte rank) {
         return switch (rank) {
             case 0 -> 0.5;
-            case 1 -> 1.0;
+            case 1 -> 0.75;
+            case 2 -> 1.0;
             default -> 2.0;
         };
     }

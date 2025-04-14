@@ -11,6 +11,7 @@ public class EarthenKnowledgeSkill extends BaseSkill {
         return switch (rank) {
             case 0 -> 2;
             case 1 -> 3;
+            case 2 -> 4;
             default -> 100;
         };
     }

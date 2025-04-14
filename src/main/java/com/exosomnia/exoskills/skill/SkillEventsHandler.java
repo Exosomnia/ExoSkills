@@ -1,7 +1,12 @@
 package com.exosomnia.exoskills.skill;
 
 import com.exosomnia.exoarmory.ExoArmory;
+import com.exosomnia.exoarmory.utils.TargetUtils;
 import com.exosomnia.exolib.ExoLib;
+import com.exosomnia.exolib.networking.packets.ParticleShapePacket;
+import com.exosomnia.exolib.particles.shapes.ParticleShapeOptions;
+import com.exosomnia.exolib.particles.shapes.ParticleShapeRing;
+import com.exosomnia.exolib.utils.ExperienceUtils;
 import com.exosomnia.exoskills.ExoSkills;
 import com.exosomnia.exoskills.Registry;
 import com.exosomnia.exoskills.action.UpdateAgeAction;
@@ -12,10 +17,12 @@ import com.exosomnia.exoskills.mixin.mixins.PlayerAccessor;
 import com.exosomnia.exoskills.networking.PacketHandler;
 import com.exosomnia.exoskills.networking.packets.OreSensePacket;
 import com.exosomnia.exoskills.skill.type.*;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +30,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -31,14 +40,16 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
@@ -47,13 +58,16 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.ASMEventHandler;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventListener;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -67,9 +81,8 @@ public class SkillEventsHandler {
     static final TagKey<DamageType> IS_EXPLOSION_TYPE = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("minecraft", "is_explosion"));
     static final UUID EXPERT_RIDER_UUID = UUID.fromString("7644e2c5-3b33-4035-8764-d6f7e03e8dba");
     static final AttributeModifier[] EXPERT_RIDER_MODS = new AttributeModifier[]{
-            new AttributeModifier(EXPERT_RIDER_UUID, "expert_rider", 0.1, AttributeModifier.Operation.MULTIPLY_BASE),
             new AttributeModifier(EXPERT_RIDER_UUID, "expert_rider", 0.15, AttributeModifier.Operation.MULTIPLY_BASE),
-            new AttributeModifier(EXPERT_RIDER_UUID, "expert_rider", 0.2, AttributeModifier.Operation.MULTIPLY_BASE),
+            new AttributeModifier(EXPERT_RIDER_UUID, "expert_rider", 0.25, AttributeModifier.Operation.MULTIPLY_BASE),
             new AttributeModifier(EXPERT_RIDER_UUID, "expert_rider", 2.0, AttributeModifier.Operation.MULTIPLY_BASE)
     };
 
@@ -94,11 +107,19 @@ public class SkillEventsHandler {
                         }
                     }
                 }
-                if (event.getProjectile().getPersistentData().getBoolean("SOUL_BURN")) {
+                Projectile projectile = event.getProjectile();
+                CompoundTag projectileData = projectile.getPersistentData();
+                if (projectileData.getBoolean("SOUL_BURN")) {
                     defender.addEffect(new MobEffectInstance(ExoArmory.REGISTRY.EFFECT_FIRE_VULNERABILITY.get(), 120, 1));
                 }
-                if (event.getProjectile().getPersistentData().getBoolean("CRIPPLING_STRIKE")) {
+                if (projectileData.getBoolean("CRIPPLING_STRIKE")) {
                     defender.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1));
+                }
+                if (projectileData.contains("QuickShot")) {
+                    int shots = projectileData.getInt("QuickShot");
+                    Entity owner = projectile.getOwner();
+                    if (!(owner instanceof LivingEntity livingOwner) || livingOwner.hasEffect(Registry.EFFECT_QUICK_SHOT.get())) return;
+                    livingOwner.addEffect(new MobEffectInstance(Registry.EFFECT_QUICK_SHOT.get(), 200, shots, true, false, true));
                 }
             }
         }
@@ -195,6 +216,33 @@ public class SkillEventsHandler {
                 }
             }
         }
+
+        if (event.getSource().getDirectEntity() instanceof AbstractArrow arrow && arrow.getPersistentData().contains("ImpactData") && !arrow.level().isClientSide) {
+            LivingEntity defender = event.getEntity();
+            ServerLevel level = (ServerLevel)defender.level();
+            Tag impactData = arrow.getPersistentData().get("ImpactData");
+            if (!(impactData instanceof CompoundTag impactDataCompound) || impactDataCompound.getBoolean("Activated")) return;
+
+            impactDataCompound.putBoolean("Activated", true);
+            double damage = impactDataCompound.getDouble("Damage");
+            double radius = impactDataCompound.getDouble("Radius");
+            if (damage <= 0 || radius <= 0) return;
+
+            ParticleShapePacket packet = new ParticleShapePacket(new ParticleShapeRing(ParticleTypes.CRIT, defender.position().add(0, 0.25, 0), new ParticleShapeOptions.Ring((float)radius, 64)));
+            for (ServerPlayer player : level.players()) {
+                com.exosomnia.exolib.networking.PacketHandler.sendToPlayer(packet, player);
+            }
+
+            level.playSound(null, defender.blockPosition(), SoundEvents.ANVIL_PLACE, SoundSource.PLAYERS, 0.25F, 0.75F);
+
+            Entity arrowOwner = arrow.getOwner();
+            for (LivingEntity nearbyEntity : level.getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, defender, defender.getBoundingBox().inflate(radius, radius, radius))) {
+                if (TargetUtils.validTarget((arrowOwner instanceof LivingEntity) ? (LivingEntity)arrowOwner : null, nearbyEntity) && nearbyEntity.distanceTo(defender) <= radius) {
+                    DamageSource damageSource = defender.level().damageSources().arrow(arrow, arrowOwner);
+                    nearbyEntity.hurt(damageSource, (float)(event.getAmount() * damage));
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -212,6 +260,32 @@ public class SkillEventsHandler {
             }
             if (shock) {
                 player.setAbsorptionAmount(Math.min(8, player.getAbsorptionAmount() + (event.getAmount() * .20F)));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerKillEvent(LivingDeathEvent event) {
+        LivingEntity defender = event.getEntity();
+        DamageSource source = event.getSource();
+        Level level = defender.level();
+        if (level.isClientSide) return;
+        if (!(source.getEntity() instanceof ServerPlayer player) || !source.is(DamageTypes.PLAYER_ATTACK)) return;
+
+        if (defender.getType().getCategory().equals(MobCategory.MONSTER) ||
+                (defender instanceof NeutralMob neutralMob && neutralMob.isAngryAt(player))) {
+            PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
+            Skills bloodlust = Skills.BLOODLUST;
+            if (!playerSkillData.hasSkill(bloodlust)) return;
+
+            byte rank = playerSkillData.getSkillRank(bloodlust);
+            BloodlustSkill skill = (BloodlustSkill) bloodlust.getSkill();
+            if (level.random.nextDouble() < skill.chanceForRank(rank)) {
+                int amplifier = skill.amountForRank(rank);
+                int duration = skill.durationForRank(rank);
+                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, amplifier));
+                player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, duration, amplifier));
+                level.playSound(null, player.blockPosition(), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 0.33F, 1.75F);
             }
         }
     }
@@ -386,10 +460,13 @@ public class SkillEventsHandler {
 
         AnvilExpertSkill skill = ((AnvilExpertSkill)anvilExpert.getSkill());
         double reduction = skill.costReductionAmountForRank(playerSkillData.getSkillRank(anvilExpert));
-        int max = Math.max(0, skill.costReductionMaxForRank(playerSkillData.getSkillRank(anvilExpert)));
-        int originalCost = event.getCost();
-        int actualReduction = (int)Math.min(max, (1.0 - reduction) * originalCost);
-        event.setCost(originalCost - actualReduction);
+        int originalLevelCost = event.getCost();
+        int originalXPCost = ExperienceUtils.totalXPForLevel(originalLevelCost);
+
+        int minReduction = skill.costReductionMinForRank(playerSkillData.getSkillRank(anvilExpert));
+        int newLevelCost = Math.min(Math.max(0, originalLevelCost - minReduction), ExperienceUtils.totalLevelForXP((int)(originalXPCost * (1.0 - reduction))));
+
+        event.setCost(newLevelCost);
     }
 
     @SubscribeEvent
@@ -522,14 +599,85 @@ public class SkillEventsHandler {
         Player player = event.player;
         ServerLevel level = (ServerLevel)player.level();
 
-        if (level.getGameTime() % 20 != 0) return;
+        if (level.getGameTime() % 30 != 0) return;
 
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills diurnalExploration = Skills.DIURNAL_EXPLORATION;
         if (!playerSkillData.hasSkill(diurnalExploration)) return;
 
         if (level.getBrightness(LightLayer.SKY, player.blockPosition()) >= 15 && !level.dimensionType().hasFixedTime()) {
-            player.addEffect(new MobEffectInstance(level.isDay() ? MobEffects.MOVEMENT_SPEED : MobEffects.DAMAGE_BOOST, 50, 0, true, false, true));
+            player.addEffect(new MobEffectInstance(level.isDay() ? MobEffects.MOVEMENT_SPEED : MobEffects.REGENERATION, 60, 0, true, false, true));
         }
+    }
+
+    @SubscribeEvent
+    public static void playerCriticalEvent(CriticalHitEvent event) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide() || !event.isVanillaCritical()) return;
+
+        PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
+        Skills preciseStrikes = Skills.PRECISE_STRIKES;
+        if (!playerSkillData.hasSkill(preciseStrikes)) return;
+
+        PreciseStrikesSkill skill = ((PreciseStrikesSkill)preciseStrikes.getSkill());
+        byte rank = playerSkillData.getSkillRank(preciseStrikes);
+        int amplifier = skill.amountForRank(rank);
+        int duration = skill.durationForRank(rank);
+        player.addEffect(new MobEffectInstance(ExoArmory.REGISTRY.EFFECT_PRECISE_STRIKES.get(), duration * 20, amplifier, true, false, true));
+    }
+
+    @SubscribeEvent
+    public static void arrowDenseImpact(EntityJoinLevelEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof AbstractArrow arrow) || !(arrow.getOwner() instanceof ServerPlayer player) || !arrow.isCritArrow()) return;
+
+        PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
+        Skills denseImpact = Skills.DENSE_IMPACT;
+        if (playerSkillData.hasSkill(denseImpact)) {
+            DenseImpactSkill skill = ((DenseImpactSkill) denseImpact.getSkill());
+            byte rank = playerSkillData.getSkillRank(denseImpact);
+            if (player.getRandom().nextDouble() < skill.chanceForRank(rank)) {
+                CompoundTag impactData = new CompoundTag();
+                impactData.putDouble("Damage", skill.damageForRank(rank));
+                impactData.putDouble("Radius", skill.radiusForRank(rank));
+                impactData.putBoolean("Activated", false);
+                arrow.getPersistentData().put("ImpactData", impactData);
+            }
+        }
+
+        Skills quickShot = Skills.QUICK_SHOT;
+        if (playerSkillData.hasSkill(quickShot) && !player.hasEffect(Registry.EFFECT_QUICK_SHOT.get())) {
+            arrow.getPersistentData().putInt("QuickShot", ((QuickShotSkill)quickShot.getSkill()).shotsForRank(playerSkillData.getSkillRank(quickShot)));
+        }
+    }
+
+    @SubscribeEvent
+    public static void useProjectileWeapon(LivingEntityUseItemEvent.Start event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack item = event.getItem();
+        if (!entity.hasEffect(Registry.EFFECT_QUICK_SHOT.get()) || !(item.getItem() instanceof ProjectileWeaponItem weaponItem)) return;
+
+        if (!entity.level().isClientSide) {
+            ServerPlayer player = (entity instanceof ServerPlayer) ? (ServerPlayer)entity : null;
+            weaponItem.releaseUsing(item, entity.level(), entity, 0);
+            if (player != null) {
+                PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
+                Skills quickShot = Skills.QUICK_SHOT;
+                int cooldown = playerSkillData.hasSkill(quickShot) ? ((QuickShotSkill) quickShot.getSkill()).cooldownForRank(playerSkillData.getSkillRank(quickShot)) : 15;
+                player.getCooldowns().addCooldown(weaponItem, cooldown - (int)Math.ceil(item.getEnchantmentLevel(Enchantments.QUICK_CHARGE) * 1.5));
+            }
+
+            MobEffectInstance quickShot = entity.getEffect(Registry.EFFECT_QUICK_SHOT.get());
+            entity.removeEffect(Registry.EFFECT_QUICK_SHOT.get());
+            int amplifier = quickShot.getAmplifier();
+            int duration = quickShot.getDuration();
+
+            if (amplifier > 0) {
+                entity.addEffect(new MobEffectInstance(Registry.EFFECT_QUICK_SHOT.get(), Math.min(200, duration + 100), amplifier - 1, true, false, true));
+                //if (player != null) { player.playNotifySound(SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.75F); }
+            }
+            else if (player != null) { player.playNotifySound(SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1.0F, 1.75F); }
+        }
+        event.setCanceled(true);
     }
 }

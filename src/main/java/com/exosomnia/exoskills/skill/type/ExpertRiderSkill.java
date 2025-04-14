@@ -11,8 +11,7 @@ public class ExpertRiderSkill extends BaseSkill {
         return switch (rank) {
             case 0 -> 0;
             case 1 -> 1;
-            case 2 -> 2;
-            default -> 3;
+            default -> 2;
         };
     }
 }

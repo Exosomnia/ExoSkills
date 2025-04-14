@@ -139,8 +139,8 @@ public class ExoSkillCommand {
         String playerName = player.getDisplayName().getString();
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         for (Skills skill : Skills.values()) {
+            playerSkillData.setSkillRank(skill, (byte)0);
             if (playerSkillData.hasSkill(skill)) {
-                playerSkillData.setSkillRank(skill, (byte)0);
                 playerSkillData.removeSkill(skill);
             }
         }

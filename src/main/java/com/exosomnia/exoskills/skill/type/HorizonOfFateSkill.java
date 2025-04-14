@@ -34,7 +34,7 @@ public class HorizonOfFateSkill extends BaseSkill implements LootableSkill {
             byte skillRank = playerSkillData.getSkillRank(horizonOfFate);
 
             if (playerSkillData.hasSkill(horizonOfFate) &&
-                    player.getRandom().nextDouble() < blockChanceForRank(skillRank)) { return true; }
+                    player.getRandom().nextDouble() < (blockChanceForRank(skillRank) * Math.min(1.1, 1.0 + (0.01 * player.getLuck())))) { return true; }
             return false;
         }
         else if (lootCause.equals(SkillsLootModifier.ENTITY_CAUSE)) {
@@ -45,7 +45,7 @@ public class HorizonOfFateSkill extends BaseSkill implements LootableSkill {
             byte skillRank = playerSkillData.getSkillRank(horizonOfFate);
 
             if (playerSkillData.hasSkill(horizonOfFate) &&
-                    player.getRandom().nextDouble() < entityChanceForRank(skillRank)) { return true; }
+                    player.getRandom().nextDouble() < (entityChanceForRank(skillRank) * Math.min(1.1, 1.0 + (0.01 * player.getLuck())))) { return true; }
             return false;
         }
         return false;
@@ -53,8 +53,8 @@ public class HorizonOfFateSkill extends BaseSkill implements LootableSkill {
 
     public double blockChanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.25;
-            case 1 -> 0.33;
+            case 0 -> 0.20;
+            case 1 -> 0.333;
             default -> 1.0;
         };
     }

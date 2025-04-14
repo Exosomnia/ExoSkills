@@ -12,6 +12,7 @@
     "FishingHookMixin",
     "BlockItemMixin",
     "EnchantmentMenuMixin",
+    "CrossbowItemMixin",
     "BowItemMixin",
     "AnvilMenuMixin",
     "PlayerAccessor",

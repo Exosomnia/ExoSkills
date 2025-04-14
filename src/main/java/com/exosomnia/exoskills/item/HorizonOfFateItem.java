@@ -6,6 +6,8 @@ import com.exosomnia.exoskills.action.HorizonOfFateAction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,10 +18,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
 
 public class HorizonOfFateItem extends Item {
+
+    private static final ResourceLocation BONUS_LOOT_TABLE = ResourceLocation.fromNamespaceAndPath("exoskills", "gameplay/horizon_bonus");
 
     public HorizonOfFateItem() {
         super(new Item.Properties().stacksTo(64));
@@ -39,7 +47,19 @@ public class HorizonOfFateItem extends Item {
 
         player.sendSystemMessage(Component.translatable("item.exoskills.horizon_of_fate.use.rewarded").withStyle(ChatFormatting.GOLD));
         player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 0.5F);
-        ExoLib.SERVER_SCHEDULE_MANAGER.scheduleAction(new HorizonOfFateAction((ServerPlayer)player, level.random.nextInt(1395)), 1);
+
+        int multiplier = 1 + (int)(level.random.nextInt(5) * 0.25);
+        ExoLib.SERVER_SCHEDULE_MANAGER.scheduleAction(new HorizonOfFateAction((ServerPlayer)player, (3 + level.random.nextInt(9)) * multiplier), 1);
+        if (multiplier >= 2) {
+            ServerLevel serverLevel = (ServerLevel)level;
+            ((ServerLevel)level).getServer().getLootData().getLootTable(BONUS_LOOT_TABLE).getRandomItems(new LootParams.Builder(serverLevel)
+                    .withParameter(LootContextParams.THIS_ENTITY, player).withParameter(LootContextParams.ORIGIN, player.position())
+                    .withLuck(player.getLuck()).create(LootContextParamSets.GIFT)).forEach(loot -> {
+                if (!player.getInventory().add(loot.copy())) {
+                    player.drop(loot, false);
+                }
+            });
+        }
 
         itemStack.shrink(1);
         return InteractionResultHolder.consume(itemStack);

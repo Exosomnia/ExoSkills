@@ -3,11 +3,13 @@
     "effect.exoskills.patience.description": "Increases luck by .2, mana regen by 2%, ranged strength by .75%, and passive critical chance by 1.5% per level.",
     "effect.exoskills.looters_luck": "Looter's Luck",
     "effect.exoskills.looters_luck.description": "Increases luck by .5 per level, can be stacked with regular luck.",
+    "effect.exoskills.quick_shot": "Quick Shot",
+    "effect.exoskills.quick_shot.description": "Your next bow shot fires instantly at full power, and crossbows reload immediately.",
 
     "item.exoskills.garnish_and_seasonings": "Garnish & Seasonings",
 
     "item.exoskills.onyx": "Onyx",
-    "item.exoskills.onyx.jei.info": "Combine with any damageable piece of equipment in a smithing table to increase it's max durability by 20%.",
+    "item.exoskills.onyx.jei.info": "Combine with any damageable piece of equipment and an iron ingot in a smithing table to increase it's max durability by 20%.",
 
     "item.exoskills.lucky_essence": "Lucky Essence",
     "item.exoskills.lucky_essence.jei.info": "Can be brewed into luck potions or used to highlight nearby, unlooted, chests.",
@@ -15,15 +17,19 @@
     "item.exoskills.lucky_gem": "Lucky Gem",
 
     "item.minecraft.potion.effect.enhanced_luck": "Potion of Enhanced Luck",
+    "item.minecraft.potion.effect.enhanced_luck_amplified": "Potion of Enhanced Luck",
     "item.minecraft.potion.effect.enhanced_luck_extended": "Potion of Enhanced Luck",
 
     "item.minecraft.splash_potion.effect.enhanced_luck": "Splash Potion of Enhanced Luck",
+    "item.minecraft.splash_potion.effect.enhanced_luck_amplified": "Splash Potion of Enhanced Luck",
     "item.minecraft.splash_potion.effect.enhanced_luck_extended": "Splash Potion of Enhanced Luck",
 
     "item.minecraft.lingering_potion.effect.enhanced_luck": "Lingering Potion of Enhanced Luck",
+    "item.minecraft.lingering_potion.effect.enhanced_luck_amplified": "Lingering Potion of Enhanced Luck",
     "item.minecraft.lingering_potion.effect.enhanced_luck_extended": "Lingering Potion of Enhanced Luck",
 
     "item.minecraft.tipped_arrow.effect.enhanced_luck": "Arrow of Enhanced Luck",
+    "item.minecraft.tipped_arrow.effect.enhanced_luck_amplified": "Arrow of Enhanced Luck",
     "item.minecraft.tipped_arrow.effect.enhanced_luck_extended": "Arrow of Enhanced Luck",
 
     "item.exoskills.boon.mining": "Boon of the Mantle",

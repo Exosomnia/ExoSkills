@@ -1,0 +1,40 @@
+{
+  "pool_injects": [
+    {
+      "table": "minecraft:gameplay/fishing",
+      "pool": "main",
+      "weight_adjustment": 20.0
+    }
+  ],
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "exoskills:gameplay/fishing/artifacts",
+          "weight": 10,
+          "quality": 2,
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type_specific": {
+                  "type": "fishing_hook",
+                  "in_open_water": true
+                }
+              }
+            },
+            {
+              "condition": "exoskills:rank_condition",
+              "skill": "artifact_angler",
+              "rank": 0,
+              "entity": "killer"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

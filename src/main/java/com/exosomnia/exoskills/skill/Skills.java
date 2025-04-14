@@ -18,8 +18,8 @@ public enum Skills {
     PICKAXE_MASTERY(new PickaxeMasterySkill(11)),
     EXPLOSIVES_EXPERT(new ExplosivesExpertSkill(12)),
     OCEANS_BLESSING(new OceansBlessingSkill(13)),
-    ARTIFACT_ANGLER(new ArtifactAnglerSkill(14)),
-    FORGOTTEN_TREASURES(new ForgottenTreasuresSkill(15)),
+    ARTIFACT_ANGLER(new SimpleSkill(14)),
+    FORGOTTEN_TREASURES(new SimpleSkill(15)),
     AQUATIC_KNOWLEDGE(new AquaticKnowledgeSkill(16)),
     PATIENCE(new PatienceSkill(17)),
     ENCHANTED_BOBBER(new EnchantedBobberSkill(18)),
@@ -34,7 +34,11 @@ public enum Skills {
     DIURNAL_EXPLORATION(new SimpleSkill(27)),
     NOMADIC_KNOWLEDGE(new NomadicKnowledgeSkill(28)),
     EXPERIENCED_EXPLORER(new ExperiencedExplorerSkill(29)),
-    EXPERT_RIDER(new ExpertRiderSkill(30));
+    EXPERT_RIDER(new ExpertRiderSkill(30)),
+    QUICK_SHOT(new QuickShotSkill(31)),
+    DENSE_IMPACT(new DenseImpactSkill(32)),
+    PRECISE_STRIKES(new PreciseStrikesSkill(33)),
+    BLOODLUST(new BloodlustSkill(34));
 
     private BaseSkill skill;
 

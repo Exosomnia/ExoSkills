@@ -11,6 +11,7 @@ public class NurturersTouchSkill extends BaseSkill {
         return switch (rank) {
             case 0 -> 0.9;
             case 1 -> 0.8;
+            case 2 -> 0.6;
             default -> 0.0;
         };
     }

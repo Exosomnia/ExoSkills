@@ -19,12 +19,7 @@
               }
             }
           ],
-          "conditions": [
-            {
-              "condition": "exoskills:skill_condition",
-              "skill": "nomadic_knowledge"
-            }
-          ]
+          "conditions": []
         },
         {
           "type": "minecraft:item",
@@ -41,14 +36,20 @@
           ],
           "conditions": [
             {
-              "condition": "exoskills:skill_condition",
+              "condition": "exoskills:rank_condition",
               "skill": "nomadic_knowledge",
-              "rank": 1
+              "rank": 1,
+              "entity": "this"
             }
           ]
         }
       ],
-      "conditions": []
+      "conditions": [
+        {
+          "condition": "exoskills:skill_condition",
+          "skill": "nomadic_knowledge"
+        }
+      ]
     }
   ]
 }
