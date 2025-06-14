@@ -17,9 +17,9 @@ public class PatienceSkill extends BaseSkill {
 
     public int maxDurationForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 9600;
-            case 1 -> 12000;
-            case 2 -> 14400;
+            case 0 -> 19200;
+            case 1 -> 28800;
+            case 2 -> 38400;
             default -> Integer.MAX_VALUE;
         };
     }

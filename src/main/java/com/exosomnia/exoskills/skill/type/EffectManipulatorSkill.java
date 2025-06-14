@@ -17,9 +17,9 @@ public class EffectManipulatorSkill extends BaseSkill {
 
     public double boostAmount(byte rank) {
         return switch (rank) {
-            case 0 -> 1.25;
-            case 1 -> 1.5;
-            default -> 10.0;
+            case 0 -> 1.1;
+            case 1 -> 1.2;
+            default -> 5.0;
         };
     }
 }

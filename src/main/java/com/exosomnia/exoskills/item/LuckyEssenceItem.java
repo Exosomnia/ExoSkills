@@ -5,6 +5,8 @@ import com.exosomnia.exoskills.mixin.mixins.RandomizableContainerBlockEntityAcce
 import com.exosomnia.exoskills.networking.PacketHandler;
 import com.exosomnia.exoskills.networking.packets.LuckyEssencePacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,6 +22,7 @@ import noobanidus.mods.lootr.api.blockentity.ILootBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LuckyEssenceItem extends Item {
     public LuckyEssenceItem() {
@@ -34,26 +37,22 @@ public class LuckyEssenceItem extends Item {
         player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 0.75F);
 
         BlockPos playerPos = player.blockPosition();
-        int px = playerPos.getX();
-        int py = playerPos.getY();
-        int pz = playerPos.getZ();
+        int currentChunkX = SectionPos.blockToSectionCoord(playerPos.getX());
+        int currentChunkZ = SectionPos.blockToSectionCoord(playerPos.getZ());
 
-        int range = 12;
         List<BlockPos> foundBlocks = new ArrayList<>();
-        BlockPos.MutableBlockPos searchPos = new BlockPos.MutableBlockPos();
-        for (int dx = -range; dx <= range; dx++) {
-            for (int dy = -range; dy <= range; dy++) {
-                for (int dz = -range; dz <= range; dz++) {
-                    searchPos.set(px+dx, py+dy, pz+dz);
-                    if (isVaildLootContainer(player, level.getBlockEntity(searchPos))) {
-                        foundBlocks.add(searchPos.immutable());
+        for (int dx = currentChunkX - 1; dx <= currentChunkX + 1; dx++) {
+            for (int dz = currentChunkZ - 1; dz <= currentChunkZ + 1; dz++) {
+                for (Map.Entry<BlockPos, BlockEntity> entry : level.getChunk(dx, dz).getBlockEntities().entrySet()) {
+                    if (isVaildLootContainer(player, entry.getValue())) {
+                        foundBlocks.add(entry.getKey());
                     }
                 }
             }
         }
         PacketHandler.sendToPlayer(new LuckyEssencePacket(foundBlocks.toArray(new BlockPos[0]), 0xDED362), (ServerPlayer)player);
 
-        player.getCooldowns().addCooldown(this, 120);
+        player.getCooldowns().addCooldown(this, 100);
         itemStack.shrink(1);
         return InteractionResultHolder.consume(itemStack);
     }

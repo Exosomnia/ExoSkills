@@ -24,20 +24,22 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         super(p_39773_, p_39774_, p_39775_, p_39776_);
     }
 
-    @Inject(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/DataSlot;set(I)V", ordinal = 5, shift = At.Shift.AFTER))
+    //@Inject(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/DataSlot;set(I)V", ordinal = 5, shift = At.Shift.AFTER))
+    @Inject(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AnvilMenu;broadcastChanges()V", shift = At.Shift.BEFORE))
     private void injectAnvilMaster(CallbackInfo ci) {
+        if (player.isLocalPlayer()) return;
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills anvilExpert = Skills.ANVIL_EXPERT;
         if (!playerSkillData.hasSkill(anvilExpert)) return;
 
         AnvilExpertSkill skill = ((AnvilExpertSkill)anvilExpert.getSkill());
         double reduction = skill.costReductionAmountForRank(playerSkillData.getSkillRank(anvilExpert));
-        int originalLevelCost = cost.get();
+        int originalLevelCost = this.cost.get();
         int originalXPCost = ExperienceUtils.totalXPForLevel(originalLevelCost);
 
         int minReduction = skill.costReductionMinForRank(playerSkillData.getSkillRank(anvilExpert));
         int newLevelCost = Math.min(Math.max(0, originalLevelCost - minReduction), ExperienceUtils.totalLevelForXP((int)(originalXPCost * (1.0 - reduction))));
 
-        cost.set(newLevelCost);
+        this.cost.set(newLevelCost);
     }
 }

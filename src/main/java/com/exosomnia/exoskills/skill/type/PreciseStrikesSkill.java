@@ -9,18 +9,18 @@ public class PreciseStrikesSkill extends BaseSkill {
 
     public int amountForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 1;
-            case 1 -> 2;
-            case 2 -> 3;
-            default -> 9;
+            case 0 -> 0;
+            case 1 -> 1;
+            case 2 -> 2;
+            default -> 7;
         };
     }
 
     public int durationForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 8;
-            case 1 -> 9;
-            case 2 -> 10;
+            case 0 -> 6;
+            case 1 -> 7;
+            case 2 -> 8;
             default -> 120;
         };
     }

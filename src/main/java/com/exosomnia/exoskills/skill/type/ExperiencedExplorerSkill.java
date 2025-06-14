@@ -17,8 +17,8 @@ public class ExperiencedExplorerSkill extends BaseSkill {
 
     public int xpForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 3;
-            case 1 -> 4;
+            case 0 -> 5;
+            case 1 -> 7;
             default -> 20;
         };
     }

@@ -14,4 +14,12 @@ public class EnchantedBobberSkill extends BaseSkill {
             default -> 10;
         };
     }
+
+    public int getLuckDuration(byte rank) {
+        return switch (rank) {
+            case 0 -> 1800;
+            case 1 -> 3600;
+            default -> 10;
+        };
+    }
 }

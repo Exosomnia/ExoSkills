@@ -12,7 +12,7 @@ public class BasicLineRenderType extends RenderType {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
-    private static LineStateShard THICK_LINES = new LineStateShard(OptionalDouble.of(3.0D));
+    private static LineStateShard THICK_LINES = new LineStateShard(OptionalDouble.of(3.5D));
 
     public static RenderType BASIC_LINES = create("basic_lines",
             DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.LINES, 256,

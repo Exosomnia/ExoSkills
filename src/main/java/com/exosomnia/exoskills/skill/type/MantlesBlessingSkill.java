@@ -9,8 +9,8 @@ public class MantlesBlessingSkill extends BaseSkill {
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.01;
-            case 1 -> 0.02;
+            case 0 -> 0.005;
+            case 1 -> 0.0125;
             default -> 1.0;
         };
     }

@@ -29,7 +29,7 @@
             {
               "function": "minecraft:enchant_with_levels",
               "levels": 24.0,
-              "treasure": true
+              "treasure": false
             }
           ],
           "name": "minecraft:bow",
@@ -50,7 +50,7 @@
             {
               "function": "minecraft:enchant_with_levels",
               "levels": 24.0,
-              "treasure": true
+              "treasure": false
             }
           ],
           "name": "minecraft:fishing_rod",
@@ -62,7 +62,7 @@
             {
               "function": "minecraft:enchant_with_levels",
               "levels": 24.0,
-              "treasure": true
+              "treasure": false
             }
           ],
           "name": "minecraft:book",
@@ -79,10 +79,21 @@
           "weight": 6,
           "conditions": [
             {
-              "condition": "exoskills:rank_condition",
-              "skill": "forgotten_treasures",
-              "rank": 0,
-              "entity": "killer"
+              "condition": "minecraft:any_of",
+              "terms": [
+                {
+                  "condition": "exoskills:rank_condition",
+                  "skill": "forgotten_treasures",
+                  "rank": 0,
+                  "entity": "killer"
+                },
+                {
+                  "condition": "exoskills:rank_condition",
+                  "skill": "forgotten_treasures",
+                  "rank": 0,
+                  "entity": "this"
+                }
+              ]
             }
           ]
         },
@@ -92,10 +103,21 @@
           "weight": 6,
           "conditions": [
             {
-              "condition": "exoskills:rank_condition",
-              "skill": "forgotten_treasures",
-              "rank": 1,
-              "entity": "killer"
+              "condition": "minecraft:any_of",
+              "terms": [
+                {
+                  "condition": "exoskills:rank_condition",
+                  "skill": "forgotten_treasures",
+                  "rank": 1,
+                  "entity": "killer"
+                },
+                {
+                  "condition": "exoskills:rank_condition",
+                  "skill": "forgotten_treasures",
+                  "rank": 1,
+                  "entity": "this"
+                }
+              ]
             }
           ]
         }

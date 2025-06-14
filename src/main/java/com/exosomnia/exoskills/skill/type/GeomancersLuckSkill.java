@@ -1,6 +1,5 @@
 package com.exosomnia.exoskills.skill.type;
 
-import com.exosomnia.exolib.loot.LootTableInjectHandler;
 import com.exosomnia.exoskills.ExoSkills;
 import com.exosomnia.exoskills.skill.PlayerSkillData;
 import com.exosomnia.exoskills.skill.Skills;
@@ -35,7 +34,7 @@ public class GeomancersLuckSkill extends BaseSkill implements LootableSkill {
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.1;
+            case 0 -> 0.05;
             case 1 -> 0.15;
             default -> 1.0;
         };
@@ -44,8 +43,8 @@ public class GeomancersLuckSkill extends BaseSkill implements LootableSkill {
     public double luckModForRank(byte rank) {
         return switch (rank) {
             case 0 -> 0.01;
-            case 1 -> 0.02;
-            default -> 0.04;
+            case 1 -> 0.015;
+            default -> 0.1;
         };
     }
 }

@@ -23,7 +23,7 @@ public abstract class ThrowablePotionItemMixin {
     private void reuseChancePotion(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, ItemStack itemStack) {
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills occultApothecary = Skills.OCCULT_APOTHECARY;
-        if (playerSkillData.hasSkill(occultApothecary) && level.random.nextDouble() < ((OccultApothecarySkill)occultApothecary.getSkill()).reuseChanceForRank(playerSkillData.getSkillRank(occultApothecary))) {
+        if (playerSkillData != null && playerSkillData.hasSkill(occultApothecary) && level.random.nextDouble() < ((OccultApothecarySkill)occultApothecary.getSkill()).reuseChanceForRank(playerSkillData.getSkillRank(occultApothecary))) {
             cir.setReturnValue(InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide()));
         }
     }

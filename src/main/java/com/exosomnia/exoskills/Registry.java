@@ -200,6 +200,7 @@ public class Registry {
             case IRONS_SPELLBOOKS:
                 ATTRIBUTE_MAGIC_DAMAGE = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.bySeparator("irons_spellbooks:spell_power", ':'));
                 ATTRIBUTE_MANA_REGEN = ForgeRegistries.ATTRIBUTES.getValue(ResourceLocation.bySeparator("irons_spellbooks:mana_regen", ':'));
+                PatienceEffect.handleIntegrations(EFFECT_PATIENCE.get(), integration);
                 loadedIntegrations.add(Integrations.IRONS_SPELLBOOKS);
                 break;
             case PUFFISH_ATTRIBUTES:

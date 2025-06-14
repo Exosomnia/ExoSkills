@@ -19,11 +19,16 @@ public class PatienceEffect extends MobEffect {
 
         this.addAttributeModifier(Attributes.LUCK,
                 LUCK_UUID, 0.2, AttributeModifier.Operation.ADDITION);
-        this.addAttributeModifier(Registry.ATTRIBUTE_MANA_REGEN,
-                MANA_UUID, 0.01, AttributeModifier.Operation.MULTIPLY_BASE);
         this.addAttributeModifier(ExoArmory.REGISTRY.ATTRIBUTE_RANGED_STRENGTH.get(),
-                RANGED_UUID, 0.005, AttributeModifier.Operation.MULTIPLY_BASE);
+                RANGED_UUID, 0.01, AttributeModifier.Operation.MULTIPLY_BASE);
         this.addAttributeModifier(ExoArmory.REGISTRY.ATTRIBUTE_PASSIVE_CRITICAL.get(),
-                CRITICAL_UUID, 0.01, AttributeModifier.Operation.MULTIPLY_BASE);
+                CRITICAL_UUID, 0.02, AttributeModifier.Operation.MULTIPLY_BASE);
+    }
+
+    public static void handleIntegrations(MobEffect effect, Registry.Integrations integration) {
+        if (integration.equals(Registry.Integrations.IRONS_SPELLBOOKS)) {
+            effect.addAttributeModifier(Registry.ATTRIBUTE_MANA_REGEN,
+                    MANA_UUID, 0.02, AttributeModifier.Operation.MULTIPLY_BASE);
+        }
     }
 }

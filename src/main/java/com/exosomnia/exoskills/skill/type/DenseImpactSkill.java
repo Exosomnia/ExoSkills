@@ -9,28 +9,27 @@ public class DenseImpactSkill extends BaseSkill {
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.333;
-            case 1 -> 0.50;
-            case 2 -> 0.667;
+            case 0 -> 0.50;
+            case 1 -> 0.75;
             default -> 1.0;
         };
     }
 
     public double damageForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.2;
-            case 1 -> 0.25;
-            case 2 -> 0.333;
+            case 0 -> 0.25;
+            case 1 -> 0.5;
+            case 2 -> 0.75;
             default -> 2.0;
         };
     }
 
     public double radiusForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 2.0;
-            case 1 -> 2.25;
-            case 2 -> 2.5;
-            default -> 5.0;
+            case 0 -> 2.5;
+            case 1 -> 3.0;
+            case 2 -> 3.5;
+            default -> 6.0;
         };
     }
 }

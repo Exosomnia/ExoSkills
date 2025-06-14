@@ -71,6 +71,7 @@ import net.minecraftforge.eventbus.api.IEventListener;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -373,12 +374,14 @@ public class SkillEventsHandler {
         Player player = event.getEntity();
         if (player.level().isClientSide) { return; }
 
+        RandomSource random = player.getRandom();
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills patience = Skills.PATIENCE;
+        Skills aquaticKnowledge = Skills.AQUATIC_KNOWLEDGE;
         if (playerSkillData.hasSkill(patience)) {
             byte rank = playerSkillData.getSkillRank(patience);
             double chance = ((PatienceSkill)patience.getSkill()).chanceForRank(rank);
-            if (player.getRandom().nextDouble() < chance) {
+            if (random.nextDouble() < chance) {
                 player.playNotifySound(SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 1.0F, 1.75F);
                 int maxDuration = ((PatienceSkill)patience.getSkill()).maxDurationForRank(rank);
                 int maxAmplifier = ((PatienceSkill)patience.getSkill()).maxAmplifierForRank(rank);
@@ -387,6 +390,14 @@ public class SkillEventsHandler {
                     player.addEffect(new MobEffectInstance(Registry.EFFECT_PATIENCE.get(), Math.min(maxDuration, currentPatience.getDuration() + 1800), Math.min(maxAmplifier, currentPatience.getAmplifier() + 1), true, false, true));
                 }
                 player.addEffect(new MobEffectInstance(Registry.EFFECT_PATIENCE.get(), 1800, 0, true, false, true));
+            }
+        }
+
+        if (playerSkillData.hasSkill(aquaticKnowledge)) {
+            byte rank = playerSkillData.getSkillRank(aquaticKnowledge);
+            double chance = ((AquaticKnowledgeSkill)patience.getSkill()).chanceForRank(rank);
+            if (random.nextDouble() < chance) {
+                event.getDrops().add(new ItemStack(Items.EXPERIENCE_BOTTLE));
             }
         }
     }
@@ -435,7 +446,7 @@ public class SkillEventsHandler {
     /*
         Singularity application in anvils
     */
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void anvilUpdateSingularityEvent(AnvilUpdateEvent event) {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
@@ -444,7 +455,7 @@ public class SkillEventsHandler {
         if (rightItem instanceof ArcaneSingularityItem && ArcaneSingularityItem.hasSingularityData(right) && !ArcaneSingularityItem.hasSingularityData(left)) {
             Enchantment requiredEnchantment = ArcaneSingularityItem.getSingularityEnchantment(right);
             if (requiredEnchantment != null && left.getEnchantmentLevel(requiredEnchantment) >= requiredEnchantment.getMaxLevel()) {
-                event.setCost(45);
+                event.setCost(50);
                 ItemStack result = left.copy();
                 CompoundTag newSingularity = ArcaneSingularityItem.getSingularityTag(right);
                 newSingularity.putBoolean("Active", true);
@@ -453,20 +464,6 @@ public class SkillEventsHandler {
             }
             else { event.setOutput(ItemStack.EMPTY); }
         }
-
-        PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(event.getPlayer());
-        Skills anvilExpert = Skills.ANVIL_EXPERT;
-        if (!playerSkillData.hasSkill(anvilExpert)) return;
-
-        AnvilExpertSkill skill = ((AnvilExpertSkill)anvilExpert.getSkill());
-        double reduction = skill.costReductionAmountForRank(playerSkillData.getSkillRank(anvilExpert));
-        int originalLevelCost = event.getCost();
-        int originalXPCost = ExperienceUtils.totalXPForLevel(originalLevelCost);
-
-        int minReduction = skill.costReductionMinForRank(playerSkillData.getSkillRank(anvilExpert));
-        int newLevelCost = Math.min(Math.max(0, originalLevelCost - minReduction), ExperienceUtils.totalLevelForXP((int)(originalXPCost * (1.0 - reduction))));
-
-        event.setCost(newLevelCost);
     }
 
     @SubscribeEvent
@@ -519,7 +516,7 @@ public class SkillEventsHandler {
             ServerPlayer sourcePlayer = (ServerPlayer)sourceEntity;
             PlayerSkillData sourceSkillData = ExoSkills.SKILL_MANAGER.getSkillData(sourcePlayer);
             Skills occultApothecary = Skills.OCCULT_APOTHECARY;
-            if (sourceSkillData.hasSkill(occultApothecary) && sourcePlayer.getRandom().nextDouble() < ((OccultApothecarySkill)occultApothecary.getSkill()).effectChanceForRank(sourceSkillData.getSkillRank(occultApothecary))) {
+            if (sourceSkillData != null && sourceSkillData.hasSkill(occultApothecary) && sourcePlayer.getRandom().nextDouble() < ((OccultApothecarySkill)occultApothecary.getSkill()).effectChanceForRank(sourceSkillData.getSkillRank(occultApothecary))) {
                 Function<MobEffectInstance, MobEffectInstance> bonusApplication = Registry.bonusEffectMappings.get(effect.getEffect());
                 if (bonusApplication != null) {
                     MobEffectInstance bonusEffect = bonusApplication.apply(effect);
@@ -535,16 +532,15 @@ public class SkillEventsHandler {
             ServerPlayer effectPlayer = (ServerPlayer)effectEntity;
             PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(effectPlayer);
             Skills effectManipulator = Skills.EFFECT_MANIPULATOR;
-            if (!playerSkillData.hasSkill(effectManipulator)) return; //No further processing from here, just return
+            if (playerSkillData == null || !playerSkillData.hasSkill(effectManipulator)) return; //No further processing from here, just return
 
-            MobEffectInstance effectInstance = event.getEffectInstance();
-            int duration = effectInstance.getDuration();
+            int duration = effect.getDuration();
             if (duration != -1) {
-                switch (effectInstance.getEffect().getCategory()) {
+                switch (effect.getEffect().getCategory()) {
                     case BENEFICIAL ->
-                            ((MobEffectInstanceAccessor)effectInstance).setDuration((int) Math.round(duration * ((EffectManipulatorSkill) effectManipulator.getSkill()).boostAmount(playerSkillData.getSkillRank(effectManipulator))));
+                            ((MobEffectInstanceAccessor)effect).setDuration((int) Math.round(duration * ((EffectManipulatorSkill) effectManipulator.getSkill()).boostAmount(playerSkillData.getSkillRank(effectManipulator))));
                     case HARMFUL ->
-                            ((MobEffectInstanceAccessor)effectInstance).setDuration((int) Math.round(duration * ((EffectManipulatorSkill) effectManipulator.getSkill()).reductionAmount(playerSkillData.getSkillRank(effectManipulator))));
+                            ((MobEffectInstanceAccessor)effect).setDuration((int) Math.round(duration * ((EffectManipulatorSkill) effectManipulator.getSkill()).reductionAmount(playerSkillData.getSkillRank(effectManipulator))));
                     case NEUTRAL -> {
                     }
                 }

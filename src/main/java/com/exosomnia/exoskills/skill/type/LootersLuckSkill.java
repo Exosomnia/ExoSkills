@@ -26,14 +26,14 @@ public class LootersLuckSkill extends BaseSkill implements LootableSkill {
 
         PlayerSkillData playerSkillData = ExoSkills.SKILL_MANAGER.getSkillData(player);
         Skills lootersLuck = Skills.LOOTERS_LUCK;
-        return playerSkillData.hasSkill(lootersLuck) && player.getRandom().nextDouble() < chanceForRank(playerSkillData.getSkillRank(lootersLuck));
+        return playerSkillData.hasSkill(lootersLuck) && player.getRandom().nextDouble() < (chanceForRank(playerSkillData.getSkillRank(lootersLuck)) + player.getLuck() * 0.002);
     }
 
     public double chanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.01;
-            case 1 -> 0.015;
-            case 2 -> 0.02;
+            case 0 -> 0.03;
+            case 1 -> 0.035;
+            case 2 -> 0.04;
             default -> 1.0;
         };
     }

@@ -1,19 +1,15 @@
 package com.exosomnia.exoskills;
 
 import com.exosomnia.exolib.recipes.brewing.BrewingRecipeHelper;
-import com.exosomnia.exolib.recipes.brewing.SimpleBrewingRecipe;
 import com.exosomnia.exoskills.rendering.RenderingManager;
 import com.exosomnia.exoskills.skill.SkillManager;
-import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.eventbus.api.EventListenerHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -38,10 +34,11 @@ public class ExoSkills
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(SKILL_MANAGER);
-        MinecraftForge.EVENT_BUS.register(RENDER_MANAGER);
         MinecraftForge.EVENT_BUS.addListener(Registry::registerCommands);
-        MinecraftForge.EVENT_BUS.addListener(this::clientTick);
-
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MinecraftForge.EVENT_BUS.register(RENDER_MANAGER);
+            MinecraftForge.EVENT_BUS.addListener(this::clientTick);
+        });
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }

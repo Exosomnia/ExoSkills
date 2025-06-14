@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ExoSkillCommand {
 
-    private static final String[] VALID_MODIFY_OPERATIONS = {"increase", "reduce", "set"};
+    private static final String[] VALID_MODIFY_OPERATIONS = {"increase", "reduce", "set", "max"};
 
     public static void register(CommandDispatcher dispatcher) {
         dispatcher.register(Commands.literal("exoskill")
@@ -112,6 +112,7 @@ public class ExoSkillCommand {
                 case "increase" -> playerSkillData.increaseSkillRank(modifiedSkill, (byte)amount);
                 case "decrease" -> playerSkillData.reduceSkillRank(modifiedSkill, (byte)amount);
                 case "set" -> playerSkillData.setSkillRank(modifiedSkill, (byte)amount);
+                case "max" -> playerSkillData.setSkillRank(modifiedSkill, (byte)Math.max(playerSkillData.getSkillRank(modifiedSkill), amount));
                 default -> sourceStack.sendFailure(Component.literal(String.format("%s is not a valid operation", operation)));
 
             }

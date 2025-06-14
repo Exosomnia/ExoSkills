@@ -104,7 +104,7 @@ public class RenderingManager {
         if (player == null) return;
 
         this.highlightLocations = positions;
-        this.highlightDuration = tick + 120;
+        this.highlightDuration = tick + 200;
         this.highlightType = type;
         this.highlightColor = color;
     }
@@ -153,7 +153,8 @@ public class RenderingManager {
                 alpha = (int) (127.0 * Math.min((highlightDuration - tick) / 20.0, 1.0));
                 color = color | (alpha << 24);
                 for (BlockPos pos : highlightLocations) {
-                    if (isVaildLootContainer(mc.player, mc.level.getBlockEntity(pos))) {
+                    //256 is the sqaure of 16, which is the distance we are looking for
+                    if (pos.distToCenterSqr(mc.player.position()) < 256.0 && isVaildLootContainer(mc.player, mc.level.getBlockEntity(pos))) {
                         drawCubeOutline(builder, stack, pos, color);
                     }
                 }

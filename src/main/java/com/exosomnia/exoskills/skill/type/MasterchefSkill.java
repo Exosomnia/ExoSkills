@@ -31,7 +31,7 @@ public class MasterchefSkill extends BaseSkill implements LootableSkill {
     public double chanceForRank(byte rank) {
         return switch (rank) {
             case 0 -> 0.1;
-            case 1 -> 0.2;
+            case 1 -> 0.3;
             default -> 1.0;
         };
     }

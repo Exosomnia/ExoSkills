@@ -53,16 +53,16 @@ public class HorizonOfFateSkill extends BaseSkill implements LootableSkill {
 
     public double blockChanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.20;
-            case 1 -> 0.333;
+            case 0 -> 0.045;
+            case 1 -> 0.075;
             default -> 1.0;
         };
     }
 
     public double entityChanceForRank(byte rank) {
         return switch (rank) {
-            case 0 -> 0.02;
-            case 1 -> 0.0333;
+            case 0 -> 0.015;
+            case 1 -> 0.025;
             default -> 1.0;
         };
     }

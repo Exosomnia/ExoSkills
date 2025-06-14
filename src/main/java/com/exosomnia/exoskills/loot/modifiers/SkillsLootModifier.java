@@ -19,12 +19,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -147,17 +150,26 @@ public class SkillsLootModifier extends LootModifier {
                 Skills enchantedBobber = Skills.ENCHANTED_BOBBER;
                 if (playerSkillData.hasSkill(enchantedBobber)) {
                     boolean hasEnchanted = false;
-                    int maxHealth = ((EnchantedBobberSkill)enchantedBobber.getSkill()).getMaxHealth(playerSkillData.getSkillRank(enchantedBobber));
+                    byte rank = playerSkillData.getSkillRank(enchantedBobber);
+                    int maxHealth = ((EnchantedBobberSkill)enchantedBobber.getSkill()).getMaxHealth(rank);
+                    int luckDuration = ((EnchantedBobberSkill)enchantedBobber.getSkill()).getLuckDuration(rank);
                     float currentHealth = player.getAbsorptionAmount();
                     if (currentHealth < maxHealth) {
                         for (ItemStack itemStack : generatedLoot) {
-                            if (itemStack.isEnchanted()) {
+                            if (itemStack.isEnchanted() || itemStack.is(Items.ENCHANTED_BOOK)) {
                                 hasEnchanted = true;
                                 break;
                             }
                         }
                         if (hasEnchanted) {
                             player.setAbsorptionAmount(Math.min(currentHealth + 1.0F, maxHealth));
+                            if (context.getLevel().random.nextBoolean()) {
+                                MobEffectInstance currentLuck = player.getEffect(MobEffects.LUCK);
+                                if (currentLuck != null) {
+                                    player.addEffect(new MobEffectInstance(MobEffects.LUCK, currentLuck.getDuration() + luckDuration, currentLuck.getAmplifier(), true, false, true));
+                                }
+                                player.addEffect(new MobEffectInstance(MobEffects.LUCK, luckDuration, 0, true, false, true));
+                            }
                         }
                     }
                 }
